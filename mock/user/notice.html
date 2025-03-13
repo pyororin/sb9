@@ -15,13 +15,39 @@
         .notification {
             position: fixed;
             right: -350px;
-            top: 20%;
+            top: 10%;
             width: 350px;
             padding: 20px;
             background-color: #f8f8f8;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             transition: right 0.5s;
+        }
+
+        .new-notification {
+            position: fixed;
+            right: -350px;
+            top: 40%;
+            width: 350px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .third-notification {
+            position: fixed;
+            right: -350px;
+            top: 70%;
+            width: 350px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            transition: all 0.5s ease;
+            opacity: 0;
         }
 
         .content-wrapper {
@@ -43,6 +69,7 @@
             flex-wrap: wrap;
             gap: 5px;
             margin-bottom: 10px;
+            width: 300px;
         }
 
         .tag {
@@ -50,17 +77,26 @@
             color: red;
             padding: 5px;
             border-radius: 5px;
-            font-size: 12px;
+            font-size: 10px;
+            white-space: nowrap;
+            display: inline-block;
         }
 
-        .avatar {
+        .avatar, .new-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
             position: absolute;
             right: 0;
-            bottom: 20px;  /* 上に移動 */
             border: 2px solid #000;
+        }
+
+        .avatar {
+            bottom: 40px;
+        }
+
+        .new-avatar {
+            bottom: -20px;
         }
 
         .notification button {
@@ -70,16 +106,21 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 220px; /* 幅を220pxに設定 */
-            margin-top: 10px; /* 上に移動 */
+            width: 220px;
+            margin-top: 10px;
         }
 
         .notification button:hover {
             background-color: #005bb5;
         }
 
+        .notification button:active {
+            background-color: #005bb5;
+            border: 2px solid #005bb5;
+        }
+
         /* ホバーで通知を表示 */
-        body:hover #notification {
+        body:hover .notification {
             right: 0;
         }
     </style>
@@ -98,13 +139,34 @@
             <div class="tag">効率良い実装</div>
         </div>
         <img src="assistant.png" alt="Assistant Avatar" class="avatar">
-        <button>コンタクトする</button>
+        <button id="contact-button">コンタクトする</button>
+    </div>
+</div>
+
+<div id="new-notification" class="new-notification">
+    <div class="content-wrapper">
+        <div class="content">
+            <p>承知しました。<br>対象14名のAIエージェントに現状を伝えて調整しておきます。<br>調整完了したら再度通知しますね。</p>
+        </div>
+        <img src="assistant.png" alt="Assistant Avatar" class="new-avatar">
+    </div>
+</div>
+
+<div id="third-notification" class="third-notification">
+    <div class="content-wrapper">
+        <div class="content">
+            <p>調整が完了しました！<br>確認の上、すぐに始めましょう。</p>
+        </div>
+        <img src="assistant.png" alt="Assistant Avatar" class="new-avatar">
     </div>
 </div>
 
 <script>
     window.onload = function() {
         const notification = document.getElementById('notification');
+        const newNotification = document.getElementById('new-notification');
+        const thirdNotification = document.getElementById('third-notification');
+        const contactButton = document.getElementById('contact-button');
 
         notification.onmouseenter = function() {
             notification.style.right = '0';
@@ -114,8 +176,19 @@
             notification.style.right = '-350px';
         };
 
-        notification.querySelector('button').onclick = function() {
-            notification.style.display = 'none';
+        contactButton.onclick = function() {
+            notification.style.top = '5%';
+            newNotification.style.opacity = '1';
+            newNotification.style.right = '0';
+
+            newNotification.onmouseleave = function() {
+                newNotification.style.right = '-350px';
+            };
+
+            setTimeout(function() {
+                thirdNotification.style.opacity = '1';
+                thirdNotification.style.right = '0';
+            }, 5000);
         };
     };
 </script>
