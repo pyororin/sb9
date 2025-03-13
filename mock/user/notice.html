@@ -99,7 +99,7 @@
             bottom: -20px;
         }
 
-        .notification button {
+        button {
             padding: 10px;
             background-color: #007aff;
             color: white;
@@ -108,20 +108,22 @@
             cursor: pointer;
             width: 220px;
             margin-top: 10px;
+            transition: background-color 0.3s;
         }
 
-        .notification button:hover {
+        button:hover {
             background-color: #005bb5;
         }
 
-        .notification button:active {
+        button:active {
             background-color: #005bb5;
             border: 2px solid #005bb5;
         }
 
-        /* ホバーで通知を表示 */
-        body:hover .notification {
-            right: 0;
+        button.disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            color: #666666;
         }
     </style>
 </head>
@@ -130,7 +132,7 @@
 <div id="notification" class="notification">
     <div class="content-wrapper">
         <div class="content">
-            <p>どうやら今進めているタスクで<br>お困りのようですね<br>社内に類似の事例を解決した方が<br>14名いらっしゃいます<br>エージェント通じてコンタクトしますか</p>
+            <p>どうやら今進めているタスクで<br>お困りのようですね<br>社内に類似の事例を解決した方が<br>14名いらっしゃいます<br><a href="#">解決事例の概要</a></p>
         </div>
         <div class="tags">
             <div class="tag">業務課題</div>
@@ -139,23 +141,23 @@
             <div class="tag">効率良い実装</div>
         </div>
         <img src="assistant.png" alt="Assistant Avatar" class="avatar">
-        <button id="contact-button">コンタクトする</button>
     </div>
 </div>
 
 <div id="new-notification" class="new-notification">
     <div class="content-wrapper">
         <div class="content">
-            <p>承知しました。<br>対象14名のAIエージェントに現状を伝えて調整しておきます。<br>調整完了したら再度通知しますね。</p>
+            <p>対象14名のAIエージェントに現状を伝えて調整しておきました。<br>此方の趣旨をお伝えしたところ、3名の方は解決の確度が高いです。<br>ミーティングを調整しますか</p>
         </div>
         <img src="assistant.png" alt="Assistant Avatar" class="new-avatar">
+        <button id="adjust-button">調整する</button>
     </div>
 </div>
 
 <div id="third-notification" class="third-notification">
     <div class="content-wrapper">
         <div class="content">
-            <p>調整が完了しました！<br>確認の上、すぐに始めましょう。</p>
+            <p>3名の方とミーティングの調整を済ませました。<br>明日の15時からです。<br>ミーティングの趣旨も既にお伝えしてあります。</p>
         </div>
         <img src="assistant.png" alt="Assistant Avatar" class="new-avatar">
     </div>
@@ -166,29 +168,35 @@
         const notification = document.getElementById('notification');
         const newNotification = document.getElementById('new-notification');
         const thirdNotification = document.getElementById('third-notification');
-        const contactButton = document.getElementById('contact-button');
+        const adjustButton = document.getElementById('adjust-button');
 
         notification.onmouseenter = function() {
             notification.style.right = '0';
+            setTimeout(function() {
+                newNotification.style.opacity = '1';
+                newNotification.style.right = '0';
+            }, 3000);
         };
 
         notification.onmouseleave = function() {
             notification.style.right = '-350px';
         };
 
-        contactButton.onclick = function() {
-            notification.style.top = '5%';
-            newNotification.style.opacity = '1';
-            newNotification.style.right = '0';
+        newNotification.onmouseleave = function() {
+            newNotification.style.right = '-350px';
+        };
 
-            newNotification.onmouseleave = function() {
-                newNotification.style.right = '-350px';
-            };
-
-            setTimeout(function() {
+        adjustButton.onclick = function() {
+            if (!adjustButton.classList.contains('disabled')) {
                 thirdNotification.style.opacity = '1';
                 thirdNotification.style.right = '0';
-            }, 5000);
+                adjustButton.classList.add('disabled');
+                adjustButton.disabled = true;
+            }
+        };
+
+        thirdNotification.onmouseleave = function() {
+            thirdNotification.style.right = '-350px';
         };
     };
 </script>
